@@ -1,0 +1,16 @@
+first setup codes windows:
+
+python -m venv my_venv
+my_venv\Scripts\activate
+pip install django
+django-admin startproject buy_best
+cd buy_best
+python manage.py runserver
+
+general use windows:
+cd Amazon/App
+my_venv\Scripts\activate
+cd buy_best
+python manage.py runserver
+
+-> py manage.py startapp users // for adding apps

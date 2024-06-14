@@ -1,5 +1,31 @@
 {% extends 'base.html' %}
 
+{% block extra_css %}
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+}
+
+.home-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.home-page h2 {
+    margin-top: 0;
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<h1>Welcome to the Homepage</h1>
+<div class="home-page">
+    <h2>Home Page</h2>
+    <p>Welcome to the home page!</p>
+</div>
 {% endblock %}

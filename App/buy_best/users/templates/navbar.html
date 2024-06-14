@@ -1,17 +1,75 @@
-<nav>
-    <ul>
-        <li><a href="{% url 'home' %}">Home</a></li>
-        <li><a href="{% url 'profile' %}">Profile</a></li>
-        {% if user.is_authenticated %}
-            <li>
-                <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: inline;">
-                    {% csrf_token %}
-                    <button type="submit" style="background: none; border: none; padding: 0; color: #069; text-decoration: underline; cursor: pointer;">Logout</button>
-                </form>
-            </li>
-        {% else %}
-            <li><a href="{% url 'login' %}">Login</a></li>
-            <li><a href="{% url 'register' %}">Register</a></li>
-        {% endif %}
-    </ul>
-</nav>
+<style>
+    .navbar {
+        background-color: #333;
+        color: #fff;
+        padding: 20px;
+        overflow: hidden;
+        border-radius: 20px;
+        margin-bottom: 10px;
+    }
+    
+    .nav-list {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .nav-list li {
+        display: inline;
+        margin-right: 10px;
+
+        
+    }
+    
+    .nav-list li:hover {
+        color: #bb0404;
+    }
+    .nav-list a {
+        padding: 3px;
+        color: #ffffff;
+        text-decoration: none;
+        
+    }
+    .nav-list a:hover {
+        color: #ff0000;
+        text-decoration: none;
+        
+    }
+    .logout-button {
+        padding: 4px;
+        background: none;
+        border: none;
+        border-radius: 5px;
+        color: rgb(0, 0, 0);
+        text-decoration: none;
+        cursor: pointer;
+        float: right;
+        background-color: #ffffff;
+    }
+    .logout-button:hover {
+        background-color: #000000;
+        color: #fff;
+    }
+    .nav-list .right {
+        float: right;
+    }
+    </style>
+    
+    <nav class="navbar">
+        <ul class="nav-list">
+            <li><a href="{% url 'home' %}">BuyBest!</a></li>
+            <li><a href="{% url 'profile' %}">Profile</a></li>
+            {% if user.is_authenticated %}
+                <li class="right">
+                    <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="logout-button">Logout</button>
+                    </form>
+                </li>
+            {% else %}
+                <li class="right"><a href="{% url 'register' %}">Register</a></li>
+                <li class="right"><a href="{% url 'login' %}">Login</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+ 

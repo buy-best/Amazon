@@ -2,12 +2,14 @@
 <html>
 <head>
     <title>Buy Best!</title>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    {% block extra_css %}
+    {% endblock %}
 </head>
 <body>
-    {% include 'navbar.html' %}
-    <div>
+    {% if not exclude_navbar %}
+        {% include 'navbar.html' %}
+    {% endif %}
+    <div class="content">
         {% block content %}
         {% endblock %}
     </div>

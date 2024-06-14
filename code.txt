@@ -11,6 +11,8 @@ general use windows:
 cd Amazon/App
 my_venv\Scripts\activate
 cd buy_best
+python manage.py makemigrations
+python manage.py migrate
 python manage.py runserver
 
 -> py manage.py startapp users // for adding apps

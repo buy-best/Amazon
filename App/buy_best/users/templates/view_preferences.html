@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+    }
+    .preferences-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .preferences-container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .preferences-container p {
+        margin: 10px 0;
+    }
+    .preferences-container .edit-button {
+        display: flex;
+        justify-content: center;
+    }
+    .preferences-container .edit-button a {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+    .preferences-container .edit-button a:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="preferences-container">
+    <h2>Your Preferences</h2>
+    {% if preferences %}
+        <p><strong>Minimum Price:</strong> {{ preferences.price_min }}</p>
+        <p><strong>Maximum Price:</strong> {{ preferences.price_max }}</p>
+        <p><strong>Product Type:</strong> {{ preferences.product_type }}</p>
+        <p><strong>Brand:</strong> {{ preferences.brand }}</p>
+        <p><strong>Keywords:</strong> {{ preferences.keywords }}</p>
+    {% else %}
+        <p>You have not set any preferences yet.</p>
+    {% endif %}
+    <div class="edit-button">
+        <a href="{% url 'edit_preferences' %}">Edit Preferences</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,8 +1,13 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Buy Best!</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'users/css/style.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     {% block extra_css %}
+    {% endblock %}
+    {% block extra_js %}
     {% endblock %}
 </head>
 <body>

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Amazon Shoe Tracker</h1>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<div class="action-buttons">
+    <a href="{% url 'add_product' %}" class="btn btn-success">Add New Product</a>
+    <form method="post" action="{% url 'start_scraping' %}" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Start Scraping</button>
+    </form>
+    <form method="post" action="{% url 'clear_scrapes' %}" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to clear all scrape data?');">Clear Current Scrapes</button>
+    </form>
+</div>
+
+<form method="get">
+    {{ filter_form.as_p }}
+    {{ sort_form.as_p }}
+    <button type="submit">Apply Filters and Sort</button>
+</form>
+
+<div class="product-list">
+    {% for product in products %}
+    <div class="product-item">
+        {% if product.image_url %}
+            <img src="{{ product.image_url }}" alt="{{ product.name }}">
+        {% else %}
+            <p>No image available</p>
+        {% endif %}
+        <h2>{{ product.name }}</h2>
+        <p>Brand: {{ product.brand }}</p>
+        <p>Current Price: ${{ product.current_price }}</p>
+        <p>Rating: {{ product.rating }}</p>
+        <p>Reviews: {{ product.review_count }}</p>
+        <a href="{% url 'product_detail' product.id %}">View Details</a>
+    </div>
+    {% empty %}
+    <p>No products found matching your criteria.</p>
+    {% endfor %}
+</div>
+{% endblock %}

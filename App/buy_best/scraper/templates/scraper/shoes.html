@@ -25,6 +25,7 @@
             <h3>{{ shoe.title }}</h3>
             <img src="{{ shoe.image }}" alt="{{ shoe.title }}">
             <p>Price: ${{ shoe.price }}</p>
+            <a href="{% url 'add_price_alert' shoe.id %}">Set Price Alert</a>
         </div>
     {% endfor %}
 </div>

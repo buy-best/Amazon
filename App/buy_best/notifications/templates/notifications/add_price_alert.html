@@ -1,8 +1,8 @@
-{% extends 'base.html' %}  <!-- Assuming you have a base template -->
+{% extends 'base.html' %}
 
 {% block content %}
-<h2>Set Price Alert for {{ shoe.title }}</h2>
-<p>Current price: ${{ shoe.price }}</p>
+<h2>Set Price Alert for {{ product.name }}</h2>
+<p>Current price: ${{ product.current_price }}</p>
 
 <form method="post">
     {% csrf_token %}
@@ -13,5 +13,4 @@
 {% if existing_alert %}
 <p>You already have an alert set for ${{ existing_alert.target_price }}</p>
 {% endif %}
-
 {% endblock %}

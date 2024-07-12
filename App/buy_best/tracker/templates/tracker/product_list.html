@@ -43,6 +43,7 @@
         <p>Rating: {{ product.rating }}</p>
         <p>Reviews: {{ product.review_count }}</p>
         <a href="{% url 'product_detail' product.id %}">View Details</a>
+        <a href="{% url 'add_price_alert' product.id %}">Set Price Alert</a>
     </div>
     {% empty %}
     <p>No products found matching your criteria.</p>

@@ -1,16 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from scraper.models import Shoe
+from tracker.models import Product  # Update this import
 from .models import PriceAlert
 from .forms import PriceAlertForm
 
 @login_required
-def add_price_alert(request, shoe_id):
-    shoe = get_object_or_404(Shoe, id=shoe_id)
+def add_price_alert(request, product_id):  # Change shoe_id to product_id
+    product = get_object_or_404(Product, id=product_id)
     
-    # Check if user already has an alert for this shoe
-    existing_alert = PriceAlert.objects.filter(user=request.user, shoe=shoe, is_active=True).first()
+    # Check if user already has an alert for this product
+    existing_alert = PriceAlert.objects.filter(user=request.user, product=product, is_active=True).first()
     
     if request.method == 'POST':
         form = PriceAlertForm(request.POST)
@@ -25,17 +25,17 @@ def add_price_alert(request, shoe_id):
                 # Create new alert
                 alert = form.save(commit=False)
                 alert.user = request.user
-                alert.shoe = shoe
+                alert.product = product
                 alert.save()
                 messages.success(request, 'Price alert created successfully!')
-            return redirect('/scraper/shoes/')
+            return redirect('/tracker')  # Update this URL to match your product list URL
     else:
-        initial_price = existing_alert.target_price if existing_alert else shoe.price
+        initial_price = existing_alert.target_price if existing_alert else product.current_price
         form = PriceAlertForm(initial={'target_price': initial_price})
     
     context = {
         'form': form,
-        'shoe': shoe,
+        'product': product,
         'existing_alert': existing_alert
     }
     return render(request, 'notifications/add_price_alert.html', context)

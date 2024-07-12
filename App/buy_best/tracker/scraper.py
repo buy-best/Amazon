@@ -105,7 +105,7 @@ def update_prices():
         price = Decimal(shoe['price'].replace('$', '').replace(',', ''))
         if created or product.current_price != price:
             product.current_price = price
-            product.brand = shoe['brand']  # Update brand in case it was extracted incorrectly before
+            product.brand = shoe['brand']
             product.rating = shoe['rating']
             product.review_count = shoe['review_count']
             product.save()
@@ -113,14 +113,14 @@ def update_prices():
             
             alerts = PriceAlert.objects.filter(product=product, is_active=True, target_price__gte=price)
             for alert in alerts:
-                send_price_drop_notification(alert, old_price)
+                send_price_drop_notification(alert)
                 alert.is_active = False
                 alert.save()
 
 
-def send_price_drop_notification(alert, old_price):
+def send_price_drop_notification(alert):
     subject = f"Price Drop Alert: {alert.product.name}"
-    message = f"The price of {alert.product.name} has dropped from ${old_price} to ${alert.product.current_price}. " \
+    message = f"The price of {alert.product.name} has dropped to ${alert.product.current_price}. " \
               f"Your target price was ${alert.target_price}."
     from_email = settings.DEFAULT_FROM_EMAIL
     recipient_list = [alert.user.email]

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<h1>{{ product.name }}</h1>
+
+<div class="product-info">
+    <img src="{{ product.image_url }}" alt="{{ product.name }}">
+    <p><strong>Brand:</strong> {{ product.brand }}</p>
+    <p><strong>Current Price:</strong> ${{ product.current_price }}</p>
+    <p><strong>Rating:</strong> {{ product.rating }}</p>
+    <p><strong>Review Count:</strong> {{ product.review_count }}</p>
+    <p><strong>Last Updated:</strong> {{ product.last_updated }}</p>
+    <a href="{{ product.url }}" target="_blank">View on Amazon</a>
+</div>
+
+<h2>Price Trend</h2>
+<canvas id="priceChart" width="400" height="200"></canvas>
+
+<h2>Price History</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for history in price_history %}
+        <tr>
+            <td>{{ history.date|date:"Y-m-d H:i" }}</td>
+            <td>${{ history.price }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+var ctx = document.getElementById('priceChart').getContext('2d');
+var chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [{% for history in price_history %}'{{ history.date|date:"Y-m-d" }}',{% endfor %}],
+        datasets: [{
+            label: 'Price',
+            data: [{% for history in price_history %}{{ history.price }},{% endfor %}],
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: false
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

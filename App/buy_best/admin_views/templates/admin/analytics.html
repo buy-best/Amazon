@@ -1,0 +1,12 @@
+{% extends "admin/change_list.html" %}
+{% load i18n %}
+
+{% block content %}
+<h2>Analytics</h2>
+<ul>
+    <li>Total Customers: {{ customers_count }}</li>
+    <li>Total Sellers: {{ sellers_count }}</li>
+    <li>Total Products: {{ products_count }}</li>
+    <li>Total Orders: {{ orders_count }}</li>
+</ul>
+{% endblock %}

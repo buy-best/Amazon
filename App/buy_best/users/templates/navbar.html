@@ -66,6 +66,9 @@
             <li><a href="{% url 'product_list' %}">Amazon Shoes</a></li>
             <li><a href="{% url 'view_preferences' %}">Preferences</a></li>
             {% if user.is_authenticated %}
+                {% if user.is_staff %}
+                    <li><a href="{% url 'admin_dashboard' %}">Admin Dashboard</a></li>
+                {% endif %}
                 <li class="right">
                     <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: inline;">
                         {% csrf_token %}
@@ -78,4 +81,3 @@
             {% endif %}
         </ul>
     </nav>
- 

@@ -11,7 +11,11 @@ urlpatterns = [
     path('home/', views.home, name='home'),
     path('profile/', views.profile, name='profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
-      path('preferences/', views.view_preferences, name='view_preferences'),
+    path('preferences/', views.view_preferences, name='view_preferences'),
     path('preferences/edit/', views.edit_preferences, name='edit_preferences'),
+    path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('admin-dashboard/trend/', views.get_customer_seller_trend, name='customer_seller_trend'),
+    path('admin-dashboard/manage-products/', views.manage_products, name='manage_products'),
+    path('admin-dashboard/manage-users/', views.manage_users, name='manage_users'),
 ]
 

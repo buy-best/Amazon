@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.9);
+            overflow: hidden;
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            height: 80px;
+            width: 100%;
+            position: fixed; /* Make the navbar fixed at the top */
+            top: 0;
+            left: 0;
+            z-index: 1000; /* Ensure the navbar is above all other content */
+        }
+        .navbar a {
+            float: left;
+            display: block;
+            color: #333;
+            text-align: center;
+            padding: 26px 20px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .navbar-right {
+            float: right;
+        }
+        .navbar-logo {
+            float: left;
+            padding: 26px 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            height: 80px;
+            line-height: 28px;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            top: 80px;
+            right: 0;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .search-container {
+            margin: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 100px; /* Adjust to avoid overlap with fixed navbar */
+        }
+        .search-container input[type="text"] {
+            width: 40%;
+            padding: 15px;
+            font-size: 17px;
+            border: 1px solid #ddd;
+            border-radius: 5px 0 0 5px;
+            outline: none;
+            transition: width 0.4s ease-in-out;
+        }
+        .search-container input[type="text"]:focus {
+            width: 50%;
+        }
+        .search-container button {
+            padding: 15px;
+            font-size: 17px;
+            border: 1px solid #ddd;
+            border-left: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 0 5px 5px 0;
+            outline: none;
+            transition: background-color 0.4s ease-in-out;
+        }
+        .search-container button:hover {
+            background-color: #0056b3;
+        }
+        .content {
+            width: 80%;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin-top: 180px; /* Adjust to avoid overlap with fixed navbar and search bar */
+        }
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .form-section {
+            width: 40%;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+        .form-section h3 {
+            margin-bottom: 10px;
+        }
+        .form-section input[type="text"], .form-section input[type="number"], .form-section input[type="password"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .form-section button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-section button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-logo">YourLogo</div>
+        <a href="#home" onclick="loadContent('home')">Home</a>
+        <a href="#my-products" onclick="loadContent('my-products')">My Products</a>
+        <a href="#pricehunter" onclick="loadContent('pricehunter')">PriceHunter</a>
+        <div class="navbar-right">
+            <div class="dropdown">
+                <a href="#profile" onclick="loadContent('profile')">Profile</a>
+                <div class="dropdown-content">
+                    <a href="#account-settings" onclick="loadContent('account-settings')">Account Settings</a>
+                    <a href="#paying-methods" onclick="loadContent('paying-methods')">Paying Methods</a>
+                </div>
+            </div>
+            <a href="{% url 'logout' %}">Logout</a> <!-- Add the logout button -->
+        </div>
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search..">
+        <button type="submit">Search</button>
+    </div>
+    <div id="content" class="content">
+        <h2>Welcome to Your Dashboard</h2>
+        <p>Select a menu option to see more details.</p>
+    </div>
+
+    <script>
+        function loadContent(section) {
+            const contentDiv = document.getElementById('content');
+            const searchContainer = document.getElementById('search-container');
+            
+            if (section === 'home' || section === 'my-products' || section === 'pricehunter') {
+                searchContainer.style.display = 'flex';
+            } else {
+                searchContainer.style.display = 'none';
+            }
+
+            if (section === 'home') {
+                contentDiv.innerHTML = '<h2>Home</h2><p>Welcome to the home section.</p>';
+            } else if (section === 'my-products') {
+                contentDiv.innerHTML = '<h2>My Products</h2><p>Here are your products.</p>';
+            } else if (section === 'pricehunter') {
+                contentDiv.innerHTML = '<h2>PriceHunter</h2><p>Track your desired prices here.</p>';
+            } else if (section === 'profile') {
+                contentDiv.innerHTML = `
+                    <div class="form-container">
+                        <div class="form-section">
+                            <h3>Add Credit Card</h3>
+                            <input type="text" placeholder="Card Number">
+                            <input type="text" placeholder="Cardholder Name">
+                            <input type="text" placeholder="Expiry Date">
+                            <input type="text" placeholder="CVV">
+                            <button>Add Card</button>
+                        </div>
+                        <div class="form-section">
+                            <h3>Add Balance</h3>
+                            <input type="number" placeholder="Amount">
+                            <button>Add Balance</button>
+                        </div>
+                        <div class="form-section">
+                            <h3>Change Password</h3>
+                            <form id="change-password-form">
+                                <input type="password" id="current-password" placeholder="Current Password">
+                                <input type="password" id="new-password" placeholder="New Password">
+                                <input type="password" id="confirm-new-password" placeholder="Confirm New Password">
+                                <button type="submit">Change Password</button>
+                            </form>
+                        </div>
+                    </div>
+                `;
+                attachChangePasswordHandler();
+            } else if (section === 'account-settings') {
+                contentDiv.innerHTML = '<h2>Account Settings</h2><p>Manage your account settings here.</p>';
+            } else if (section === 'paying-methods') {
+                contentDiv.innerHTML = '<h2>Paying Methods</h2><p>Manage your paying methods and save your credit card details here.</p>';
+            }
+        }
+
+        function attachChangePasswordHandler() {
+            const form = document.getElementById('change-password-form');
+            form.onsubmit = async function(event) {
+                event.preventDefault();
+                const currentPassword = document.getElementById('current-password').value;
+                const newPassword = document.getElementById('new-password').value;
+                const confirmNewPassword = document.getElementById('confirm-new-password').value;
+
+                if (newPassword !== confirmNewPassword) {
+                    alert('New passwords do not match.');
+                    return;
+                }
+
+                const response = await fetch('/change-password/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken') // Assuming you have a function to get the CSRF token
+                    },
+                    body: JSON.stringify({
+                        current_password: currentPassword,
+                        new_password: newPassword
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert('Password changed successfully.');
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            };
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+</body>
+</html>

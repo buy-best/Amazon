@@ -25,4 +25,5 @@ urlpatterns = [
     path('', include('users.urls')),
     path('scraper/', include('scraper.urls')),
     path('tracker/', include('tracker.urls')),
+    path('buyer/', include('buyer.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

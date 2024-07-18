@@ -26,4 +26,5 @@ urlpatterns = [
     path('scraper/', include('scraper.urls')),
     path('notifications/', include('notifications.urls')),
     path('tracker/', include('tracker.urls')),
+    path('report/', include('report.urls')),  
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

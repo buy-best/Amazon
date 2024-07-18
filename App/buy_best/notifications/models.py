@@ -10,4 +10,5 @@ class PriceAlert(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Alert for {self.product.name if self.product else self.shoe.title} - Target: {self.target_price}"
+        product_name = self.product.name if self.product else "Unknown Product"
+        return f"Alert for {product_name} - Target: {self.target_price}"  # Note the closing parenthesis here

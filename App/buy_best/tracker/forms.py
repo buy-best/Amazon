@@ -1,5 +1,7 @@
 from django import forms
 from .models import Product
+from django import forms
+from .models import Product, AutoBuy
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -30,3 +32,11 @@ class ProductSortForm(forms.Form):
         ('-current_price', 'Price (High to Low)'),
         ('rating', 'Rating'),
     ], required=False)
+
+class AutoBuyForm(forms.ModelForm):
+    class Meta:
+        model = AutoBuy
+        fields = ['target_price']
+        widgets = {
+            'target_price': forms.NumberInput(attrs={'class': 'form-control'}),
+        }

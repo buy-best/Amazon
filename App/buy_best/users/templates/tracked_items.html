@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Tracked Items</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Brand</th>
+            <th>Current Price</th>
+            <th>Target Price</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in tracked_items %}
+        <tr>
+            <td>
+                {% if item.product.image_url %}
+                    <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" style="width: 50px; height: auto;">
+                {% else %}
+                    No image available
+                {% endif %}
+            </td>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.product.brand }}</td>
+            <td>${{ item.product.current_price }}</td>
+            <td>${{ item.target_price }}</td>
+            <td>{{ item.bought|yesno:"Bought,Not Bought" }}</td>
+            <td>
+                <a href="{% url 'product_detail' item.product.id %}" class="btn btn-info">View Details</a>
+                {% if not item.bought %}
+                    <a href="{% url 'cancel_auto_buy' item.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel this auto-buy?');">Cancel Auto-Buy</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7">No tracked items.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

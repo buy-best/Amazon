@@ -103,6 +103,14 @@ def update_prices():
             product.review_count = shoe['review_count']
             product.save()
             PriceHistory.objects.create(product=product, price=price)
+            auto_buys = product.auto_buys.filter(target_price__gte=price, bought=False)
+            for auto_buy in auto_buys:
+                user = auto_buy.user
+                if user.balance >= price:
+                    user.balance -= price
+                    user.save()
+                    auto_buy.bought = True
+                    auto_buy.save()
 
 # Test the scraper function independently
 if __name__ == "__main__":

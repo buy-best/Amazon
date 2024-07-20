@@ -22,3 +22,5 @@ class CustomUserChangeForm(UserChangeForm):
         model = CustomUser
         fields = ('username', 'email', 'first_name', 'last_name')  # Include fields you want to edit
     
+class BalanceForm(forms.Form):
+    amount = forms.DecimalField(max_digits=10, decimal_places=2, min_value=0.01, widget=forms.NumberInput(attrs={'class': 'form-control'}))

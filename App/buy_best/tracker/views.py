@@ -57,12 +57,32 @@ def clear_scrapes(request):
         messages.success(request, 'All scrape data has been cleared!')
     return redirect('product_list')
 
+from .forms import AutoBuyForm
+
+from .forms import AutoBuyForm
+from .models import AutoBuy
+
 def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     price_history = product.price_history.all()
-    return render(request, 'tracker/product_detail.html', {'product': product, 'price_history': price_history})
 
+    if request.method == 'POST':
+        auto_buy_form = AutoBuyForm(request.POST)
+        if auto_buy_form.is_valid():
+            auto_buy = auto_buy_form.save(commit=False)
+            auto_buy.user = request.user
+            auto_buy.product = product
+            auto_buy.save()
+           
+            return redirect('product_detail', product_id=product_id)
+    else:
+        auto_buy_form = AutoBuyForm()
 
+    return render(request, 'tracker/product_detail.html', {
+        'product': product,
+        'price_history': price_history,
+        'auto_buy_form': auto_buy_form
+    })
 def add_product(request):
     if request.method == 'POST':
         form = ProductForm(request.POST)

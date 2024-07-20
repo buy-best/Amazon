@@ -1,31 +1,31 @@
 {% extends 'base.html' %}
 
-{% block extra_css %}
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-}
-
-.home-page {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.home-page h2 {
-    margin-top: 0;
-}
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="home-page">
-    <h2>Home Page</h2>
-    <p>Welcome to the home page!</p>
+<h1>All Products</h1>
+
+<form method="get">
+    {{ filter_form.as_p }}
+    {{ sort_form.as_p }}
+    <button type="submit">Apply Filters and Sort</button>
+</form>
+
+<div class="product-list">
+    {% for product in products %}
+    <div class="product-item">
+        {% if product.image_url %}
+            <img src="{{ product.image_url }}" alt="{{ product.name }}">
+        {% else %}
+            <p>No image available</p>
+        {% endif %}
+        <h2>{{ product.name }}</h2>
+        <p>Brand: {{ product.brand }}</p>
+        <p>Current Price: ${{ product.current_price }}</p>
+        <p>Rating: {{ product.rating }}</p>
+        <p>Reviews: {{ product.review_count }}</p>
+        <a href="{% url 'product_detail' product.id %}">View Details</a>
+    </div>
+    {% empty %}
+    <p>No products found matching your criteria.</p>
+    {% endfor %}
 </div>
 {% endblock %}

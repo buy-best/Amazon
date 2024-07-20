@@ -61,13 +61,10 @@
             <li><a href="{% url 'product_list' %}">Amazon Shoes</a></li>
             <li><a href="{% url 'tracked_items' %}">Tracked Items</a></li>
             {% if user.is_authenticated %}
-<<<<<<< HEAD
                 {% if user.is_staff %}
                     <li><a href="{% url 'admin_dashboard' %}">Admin Dashboard</a></li>
                 {% endif %}
-=======
 
->>>>>>> origin/final
                 <li class="right">
                     
                     <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: inline;">

@@ -139,7 +139,6 @@ def edit_preferences(request):
             return redirect('view_preferences')
     else:
         form = UserPreferenceForm(instance=preferences)
-
     return render(request, 'edit_preferences.html', {'form': form})
 
 @login_required
@@ -201,6 +200,7 @@ def manage_users(request):
         'sellers': sellers,
     }
     return render(request, 'manage_users.html', context)
+
 @login_required
 def cancel_auto_buy(request, auto_buy_id):
     auto_buy = AutoBuy.objects.get(id=auto_buy_id, user=request.user)
@@ -208,3 +208,16 @@ def cancel_auto_buy(request, auto_buy_id):
 
       
     return redirect('tracked_items')
+
+
+@login_required
+def view_preferences(request):
+    try:
+        preferences = UserPreference.objects.get(user=request.user)
+    except UserPreference.DoesNotExist:
+        preferences = None
+
+    context = {
+        'preferences': preferences,
+    }
+    return render(request, 'view_preferences.html', context)

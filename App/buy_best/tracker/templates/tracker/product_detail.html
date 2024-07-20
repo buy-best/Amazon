@@ -17,7 +17,12 @@
     <p><strong>Last Updated:</strong> {{ product.last_updated }}</p>
     <a href="{{ product.url }}" target="_blank">View on Amazon</a>
 </div>
-
+<h2>Set Auto-Buy</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ auto_buy_form.as_p }}
+    <button type="submit" class="btn btn-primary">Set Auto-Buy</button>
+</form>
 <h2>Price Trend</h2>
 <canvas id="priceChart" width="400" height="200"></canvas>
 
@@ -38,6 +43,8 @@
         {% endfor %}
     </tbody>
 </table>
+
+
 
 <script>
 var ctx = document.getElementById('priceChart').getContext('2d');

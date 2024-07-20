@@ -6,6 +6,9 @@ from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import UserPreferenceForm
 from .models import UserPreference, CustomUser, Product, Order
+from django.shortcuts import render
+from tracker.models import Product
+from tracker.forms import ProductFilterForm, ProductSortForm
 
 def register(request):
     if request.method == 'POST':
@@ -35,7 +38,39 @@ def user_logout(request):
 
 @login_required
 def home(request):
-    return render(request, 'home.html')
+    products = Product.objects.all()
+    filter_form = ProductFilterForm(request.GET)
+    sort_form = ProductSortForm(request.GET)
+
+    if filter_form.is_valid():
+        brand = filter_form.cleaned_data.get('brand')
+        min_price = filter_form.cleaned_data.get('min_price')
+        max_price = filter_form.cleaned_data.get('max_price')
+        rating = filter_form.cleaned_data.get('rating')
+        search = filter_form.cleaned_data.get('search')
+
+        if brand:
+            products = products.filter(brand=brand)
+        if min_price is not None:
+            products = products.filter(current_price__gte=min_price)
+        if max_price is not None:
+            products = products.filter(current_price__lte=max_price)
+        if rating:
+            products = products.filter(rating__startswith=rating)
+        if search:
+            products = products.filter(Q(name__icontains=search) | Q(brand__icontains=search))
+
+    if sort_form.is_valid():
+        sort_by = sort_form.cleaned_data.get('sort_by')
+        if sort_by:
+            products = products.order_by(sort_by)
+
+    context = {
+        'products': products,
+        'filter_form': filter_form,
+        'sort_form': sort_form,
+    }
+    return render(request, 'home.html', context)
 
 @login_required
 def profile(request):
@@ -52,14 +87,27 @@ def edit_profile(request):
         form = CustomUserChangeForm(instance=request.user)
     return render(request, 'edit_profile.html', {'form': form})
 
-@login_required
-def view_preferences(request):
-    try:
-        preferences = UserPreference.objects.get(user=request.user)
-    except UserPreference.DoesNotExist:
-        preferences = None
+from tracker.models import AutoBuy
 
-    return render(request, 'view_preferences.html', {'preferences': preferences})
+@login_required
+def tracked_items(request):
+    tracked_items = AutoBuy.objects.filter(user=request.user)
+    return render(request, 'tracked_items.html', {'tracked_items': tracked_items})
+
+from .forms import BalanceForm
+
+@login_required
+def add_balance(request):
+    if request.method == 'POST':
+        form = BalanceForm(request.POST)
+        if form.is_valid():
+            amount = form.cleaned_data['amount']
+            request.user.balance += amount
+            request.user.save()
+            return redirect('profile')
+    else:
+        form = BalanceForm()
+    return render(request, 'add_balance.html', {'form': form})
 
 @login_required
 def edit_preferences(request):
@@ -153,3 +201,10 @@ def manage_users(request):
         'sellers': sellers,
     }
     return render(request, 'manage_users.html', context)
+@login_required
+def cancel_auto_buy(request, auto_buy_id):
+    auto_buy = AutoBuy.objects.get(id=auto_buy_id, user=request.user)
+    auto_buy.delete()
+
+      
+    return redirect('tracked_items')

@@ -1,7 +1,7 @@
 <style>
     body {
         font-family: Arial, sans-serif;
-        background-color: #f9f9f9;
+        background-color: #ffffff;
     }
     .navbar {
         background-color: #333;
@@ -41,14 +41,9 @@
     }
     .logout-button {
         padding: 4px;
-        background: none;
-        border: none;
-        border-radius: 5px;
-        color: rgb(0, 0, 0);
         text-decoration: none;
         cursor: pointer;
-        float: right;
-        background-color: #ffffff;
+     
     }
     .logout-button:hover {
         background-color: #000000;
@@ -64,16 +59,23 @@
             <li><a href="{% url 'home' %}">BuyBest!</a></li>
             <li><a href="{% url 'profile' %}">Profile</a></li>
             <li><a href="{% url 'product_list' %}">Amazon Shoes</a></li>
-            <li><a href="{% url 'view_preferences' %}">Preferences</a></li>
+            <li><a href="{% url 'tracked_items' %}">Tracked Items</a></li>
             {% if user.is_authenticated %}
+<<<<<<< HEAD
                 {% if user.is_staff %}
                     <li><a href="{% url 'admin_dashboard' %}">Admin Dashboard</a></li>
                 {% endif %}
+=======
+
+>>>>>>> origin/final
                 <li class="right">
+                    
                     <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: inline;">
                         {% csrf_token %}
                         <button type="submit" class="logout-button">Logout</button>
                     </form>
+                    <li class="right">Balance: ${{ user.balance }}</li>
+                    <li class="right"><a href="{% url 'add_balance' %}">Add Balance</a></li>
                 </li>
             {% else %}
                 <li class="right"><a href="{% url 'register' %}">Register</a></li>

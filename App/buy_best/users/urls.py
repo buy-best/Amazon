@@ -17,5 +17,8 @@ urlpatterns = [
     path('admin-dashboard/trend/', views.get_customer_seller_trend, name='customer_seller_trend'),
     path('admin-dashboard/manage-products/', views.manage_products, name='manage_products'),
     path('admin-dashboard/manage-users/', views.manage_users, name='manage_users'),
+    path('tracked_items/', views.tracked_items, name='tracked_items'),
+    path('add_balance/', views.add_balance, name='add_balance'),
+    path('cancel_auto_buy/<int:auto_buy_id>/', views.cancel_auto_buy, name='cancel_auto_buy'),
 ]
 

@@ -110,6 +110,14 @@ def update_prices():
             product.review_count = shoe['review_count']
             product.save()
             PriceHistory.objects.create(product=product, price=price)
+            auto_buys = product.auto_buys.filter(target_price__gte=price, bought=False)
+            for auto_buy in auto_buys:
+                user = auto_buy.user
+                if user.balance >= price:
+                    user.balance -= price
+                    user.save()
+                    auto_buy.bought = True
+                    auto_buy.save()
             
             alerts = PriceAlert.objects.filter(product=product, is_active=True, target_price__gte=price)
             for alert in alerts:
@@ -129,6 +137,7 @@ def send_price_drop_notification(alert):
         print(f"Email sent to {alert.user.email}")
     except Exception as e:
         print(f"Failed to send email: {str(e)}")
+
 
 
 # Test the scraper function independently

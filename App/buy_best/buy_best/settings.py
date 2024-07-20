@@ -42,8 +42,7 @@ INSTALLED_APPS = [
     'scraper',
     'notifications',
     'tracker',
-    "report",
-    "admin_views"
+    "report"
 ]
 
 MIDDLEWARE = [

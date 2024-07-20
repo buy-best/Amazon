@@ -7,6 +7,13 @@ from bs4 import BeautifulSoup
 import time
 from decimal import Decimal
 from .models import Product, PriceHistory
+from decimal import Decimal
+from .models import Product, PriceHistory
+from notifications.models import PriceAlert
+from django.core.mail import send_mail
+from django.conf import settings
+
+
 
 KNOWN_BRANDS = [
     "New Balance", "Nike", "Adidas", "Reebok", "Puma", "Asics", "Skechers",
@@ -98,11 +105,31 @@ def update_prices():
         price = Decimal(shoe['price'].replace('$', '').replace(',', ''))
         if created or product.current_price != price:
             product.current_price = price
-            product.brand = shoe['brand']  # Update brand in case it was extracted incorrectly before
+            product.brand = shoe['brand']
             product.rating = shoe['rating']
             product.review_count = shoe['review_count']
             product.save()
             PriceHistory.objects.create(product=product, price=price)
+            
+            alerts = PriceAlert.objects.filter(product=product, is_active=True, target_price__gte=price)
+            for alert in alerts:
+                send_price_drop_notification(alert)
+                alert.is_active = False
+                alert.save()
+
+
+def send_price_drop_notification(alert):
+    subject = f"Price Drop Alert: {alert.product.name}"
+    message = f"The price of {alert.product.name} has dropped to ${alert.product.current_price}. " \
+              f"Your target price was ${alert.target_price}."
+    from_email = settings.DEFAULT_FROM_EMAIL
+    recipient_list = [alert.user.email]
+    try:
+        send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+        print(f"Email sent to {alert.user.email}")
+    except Exception as e:
+        print(f"Failed to send email: {str(e)}")
+
 
 # Test the scraper function independently
 if __name__ == "__main__":

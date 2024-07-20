@@ -2,6 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import time
+from decimal import Decimal
+
 
 def scrape_amazon_shoes():
     url = "https://www.amazon.com/s?k=shoes"
@@ -37,8 +39,23 @@ def scrape_amazon_shoes():
                 'image': image['src']
             }
             shoe_list.append(shoe)
+    
+    update_shoes_from_scrape(shoe_list)
+
 
     return shoe_list
+
+def update_shoes_from_scrape(shoe_list):
+    for shoe_data in shoe_list:
+        shoe, created = Shoe.objects.get_or_create(
+            title=shoe_data['title'],
+            defaults={'image': shoe_data['image'], 'price': Decimal(shoe_data['price'])}
+        )
+        if not created:
+            shoe.update_price(Decimal(shoe_data['price']))
+            shoe.image = shoe_data['image']
+            shoe.save()
+
 
 # Test the scraper function independently
 if __name__ == "__main__":

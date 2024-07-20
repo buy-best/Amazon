@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Set Price Alert for {{ product.name }}</h2>
+<p>Current price: ${{ product.current_price }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% if existing_alert %}Update{% else %}Create{% endif %} Price Alert</button>
+</form>
+
+{% if existing_alert %}
+<p>You already have an alert set for ${{ existing_alert.target_price }}</p>
+{% endif %}
+{% endblock %}

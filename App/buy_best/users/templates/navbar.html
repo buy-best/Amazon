@@ -4,12 +4,14 @@
         background-color: #ffffff;
     }
     .navbar {
-        background-color: #333;
-        color: #fff;
+        background-color: #ffffff; /* White background */
+        color: #000000; /* Black text */
         padding: 20px;
         overflow: hidden;
-        border-radius: 20px;
+        border-radius: 0; /* Remove rounded corners */
         margin-bottom: 10px;
+        width: 100%;
+        box-shadow: 0 4px 2px -2px gray; /* Add shadow for depth */
     }
     
     .nav-list {
@@ -20,35 +22,37 @@
     
     .nav-list li {
         display: inline;
-        margin-right: 10px;
-
-        
+        margin-right: 20px; /* Increased spacing between items */
+        font-size: 16px; /* Increased font size */
     }
     
-    .nav-list li:hover {
-        color: #bb0404;
-    }
     .nav-list a {
-        padding: 3px;
-        color: #ffffff;
+        padding: 5px;
+        color: #000000; /* Black text */
         text-decoration: none;
-        
+        transition: color 0.3s ease; /* Smooth transition for hover effect */
     }
+    
     .nav-list a:hover {
-        color: #ff0000;
+        color: #ff0000; /* Red text on hover */
         text-decoration: none;
-        
     }
+    
     .logout-button {
         padding: 4px;
         text-decoration: none;
         cursor: pointer;
-     
+        background-color: transparent;
+        border: none;
+        color: #000000; /* Black text */
+        transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for hover effect */
     }
+    
     .logout-button:hover {
-        background-color: #000000;
-        color: #fff;
+        background-color: #f0f0f0; /* Light grey background on hover */
+        color: #000000; /* Black text */
     }
+    
     .nav-list .right {
         float: right;
     }

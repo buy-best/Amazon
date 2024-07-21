@@ -4,12 +4,14 @@
         background-color: #ffffff;
     }
     .navbar {
-        background-color: #333;
-        color: #fff;
+        background-color: #ffffff; /* White background */
+        color: #000000; /* Black text */
         padding: 20px;
         overflow: hidden;
-        border-radius: 20px;
+        border-radius: 0; /* Remove rounded corners */
         margin-bottom: 10px;
+        width: 100%;
+        box-shadow: 0 4px 2px -2px gray; /* Add shadow for depth */
     }
     
     .nav-list {
@@ -20,61 +22,59 @@
     
     .nav-list li {
         display: inline;
-        margin-right: 10px;
-
-        
+        margin-right: 20px; /* Increased spacing between items */
+        font-size: 16px; /* Increased font size */
     }
     
-    .nav-list li:hover {
-        color: #bb0404;
-    }
     .nav-list a {
-        padding: 3px;
-        color: #ffffff;
+        padding: 5px;
+        color: #000000; /* Black text */
         text-decoration: none;
-        
+        transition: color 0.3s ease; /* Smooth transition for hover effect */
     }
+    
     .nav-list a:hover {
-        color: #ff0000;
+        color: #ff0000; /* Red text on hover */
         text-decoration: none;
-        
     }
+    
     .logout-button {
         padding: 4px;
         text-decoration: none;
         cursor: pointer;
-     
+        background-color: transparent;
+        border: none;
+        color: #000000; /* Black text */
+        transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for hover effect */
     }
+    
     .logout-button:hover {
-        background-color: #000000;
-        color: #fff;
+        background-color: #f0f0f0; /* Light grey background on hover */
+        color: #000000; /* Black text */
     }
+    
     .nav-list .right {
         float: right;
     }
-    </style>
-    
-    <nav class="navbar">
-        <ul class="nav-list">
-            <li><a href="{% url 'home' %}">BuyBest!</a></li>
-            <li><a href="{% url 'profile' %}">Profile</a></li>
-            <li><a href="{% url 'product_list' %}">Amazon Shoes</a></li>
-            <li><a href="{% url 'tracked_items' %}">Tracked Items</a></li>
-            {% if user.is_authenticated %}
+</style>
 
-                <li class="right">
-                    
-                    <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="logout-button">Logout</button>
-                    </form>
-                    <li class="right">Balance: ${{ user.balance }}</li>
-                    <li class="right"><a href="{% url 'add_balance' %}">Add Balance</a></li>
-                </li>
-            {% else %}
-                <li class="right"><a href="{% url 'register' %}">Register</a></li>
-                <li class="right"><a href="{% url 'login' %}">Login</a></li>
-            {% endif %}
-        </ul>
-    </nav>
- 
+<nav class="navbar">
+    <ul class="nav-list">
+        <li><a href="{% url 'home' %}">BuyBest!</a></li>
+        <li><a href="{% url 'profile' %}">Profile</a></li>
+        <li><a href="{% url 'tracked_items' %}">Tracked Items</a></li>
+        {% if user.is_authenticated %}
+            <li class="right">
+                <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-button">Logout</button>
+                </form>
+                <li class="right">Balance: ${{ user.balance }}</li>
+                <li class="right"><a href="{% url 'add_balance' %}">Add Balance</a></li>
+            </li>
+        {% else %}
+            <li class="right"><a href="{% url 'register' %}">Register</a></li>
+            <li class="right"><a href="{% url 'login' %}">Login</a></li>
+        {% endif %}
+    </ul>
+</nav>

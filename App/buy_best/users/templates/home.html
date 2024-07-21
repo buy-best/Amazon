@@ -1,13 +1,137 @@
 {% extends 'base.html' %}
 
-{% block content %}
-<h1>All Products</h1>
+{% block extra_css %}
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+}
 
-<form method="get">
-    {{ filter_form.as_p }}
-    {{ sort_form.as_p }}
-    <button type="submit">Apply Filters and Sort</button>
-</form>
+.form-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px; /* Add space between search bar and products */
+}
+
+form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+form label {
+    display: none; /* Remove labels for a cleaner look */
+}
+
+form input, form select {
+    padding: 10px;
+    border-radius: 20px; /* Rounded corners */
+    border: 1px solid #ddd;
+    font-size: 14px;
+    font-family: 'Arial', sans-serif;
+    width: 150px; /* Smaller width */
+    color: #333;
+    transition: border-color 0.3s ease;
+}
+
+form input::placeholder {
+    color: #999;
+    font-style: italic; /* Aesthetic placeholder text */
+}
+
+form input:focus, form select:focus {
+    border-color: #007bff; /* Blue border on focus */
+}
+
+form button {
+    background-color: #000000; /* Black button */
+    border: none;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 20px; /* Rounded corners */
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #333333;
+}
+
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.product-item {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 4px 2px -2px gray;
+    padding: 20px;
+    width: calc(25% - 40px); /* 4 items per row with spacing */
+    text-align: center;
+}
+
+.product-item img {
+    max-width: 100%;
+    height: auto;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+
+.product-item h2 {
+    font-size: 16px;
+    color: #000000;
+}
+
+.product-item p {
+    color: #000000;
+    font-size: 12px;
+    margin: 10px 0;
+}
+
+.product-item a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.product-item a:hover {
+    color: #ff0000;
+}
+
+.no-products {
+    text-align: center;
+    color: #333333; /* Dark grey text */
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 4px 2px -2px gray;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <form method="get">
+        {{ filter_form.as_p }}
+        {{ sort_form.as_p }}
+        <button type="submit">Apply Filters and Sort</button>
+    </form>
+</div>
 
 <div class="product-list">
     {% for product in products %}
@@ -25,7 +149,7 @@
         <a href="{% url 'product_detail' product.id %}">View Details</a>
     </div>
     {% empty %}
-    <p>No products found matching your criteria.</p>
+    <p class="no-products">No products found matching your criteria.</p>
     {% endfor %}
 </div>
 {% endblock %}

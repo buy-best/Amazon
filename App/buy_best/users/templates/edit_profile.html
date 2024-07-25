@@ -2,49 +2,85 @@
 
 {% block extra_css %}
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-}
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+    }
 
-.edit-profile-page {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+    .edit-profile-page {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
 
-.edit-profile-page h2 {
-    margin-top: 0;
-}
+    .edit-profile-page h2 {
+        margin-top: 0;
+        font-size: 26px;
+        font-weight: bold;
+        color: #333;
+    }
 
-.save-changes-button {
-    display: inline-block;
-    padding: 10px 20px;
-    margin-top: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-decoration: none;
-}
+    .edit-profile-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
 
-.save-changes-button:hover {
-    background-color: #0056b3;
-}
+    .form-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .form-group label {
+        flex: 1;
+        font-weight: bold;
+        color: #333;
+        margin-right: 10px;
+    }
+
+    .form-group input {
+        flex: 2;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .save-changes-button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin-top: 10px;
+        background-color: #000;
+        color: #fff;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+    .save-changes-button:hover {
+        background-color: #333;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="edit-profile-page">
     <h2>Edit Profile</h2>
-    <form method="post">
+    <form method="post" class="edit-profile-form">
         {% csrf_token %}
-        {{ form.as_p }}
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label_tag }}</label>
+                {{ field }}
+            </div>
+        {% endfor %}
         <button type="submit" class="save-changes-button">Save changes</button>
     </form>
 </div>

@@ -1,11 +1,101 @@
 {% extends 'base.html' %}
 
+{% block extra_css %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+    }
+
+    .add-balance-page {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .add-balance-page h1 {
+        margin-top: 0;
+        font-size: 26px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .add-balance-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .form-group label {
+        flex: 1;
+        font-weight: bold;
+        color: #333;
+        margin-right: 10px;
+    }
+
+    .form-group input {
+        flex: 2;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .btn-primary, .btn-secondary {
+        display: inline-block;
+        padding: 10px 20px;
+        margin-top: 10px;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+    .btn-primary {
+        background-color: #000;
+        color: #fff;
+    }
+
+    .btn-primary:hover {
+        background-color: #333;
+    }
+
+    .btn-secondary {
+        background-color: #ccc;
+        color: #333;
+        margin-left: 10px;
+    }
+
+    .btn-secondary:hover {
+        background-color: #999;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<h1>Add Balance</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Add Balance</button>
-</form>
-<a href="{% url 'profile' %}" class="btn btn-secondary">Back to Profile</a>
+<div class="add-balance-page">
+    <h1>Add Balance</h1>
+    <form method="post" class="add-balance-form">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label_tag }}</label>
+                {{ field }}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Add Balance</button>
+        <a href="{% url 'profile' %}" class="btn btn-secondary">Back to Profile</a>
+    </form>
+</div>
 {% endblock %}

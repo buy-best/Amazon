@@ -4,10 +4,18 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import CustomUser
 from django.contrib.auth.forms import UserChangeForm
 
+
 class CustomUserCreationForm(UserCreationForm):
-    class Meta:
+    USER_TYPE_CHOICES = [
+        ('customer', 'Customer'),
+        ('seller', 'Seller')
+    ]
+    
+    user_type = forms.ChoiceField(choices=USER_TYPE_CHOICES, required=True)
+
+    class Meta(UserCreationForm.Meta):
         model = CustomUser
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ('username', 'email', 'password1', 'password2', 'user_type')
 
 class CustomAuthenticationForm(AuthenticationForm):
     class Meta:

@@ -14,8 +14,16 @@ def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('login')
+            user = form.save(commit=False)
+            user_type = form.cleaned_data['user_type']
+            
+            if user_type == 'customer':
+                user.is_customer = True
+            elif user_type == 'seller':
+                user.is_seller = True
+            
+            user.save()
+            return redirect('login')  # Redirect to the login page after successful registration
     else:
         form = CustomUserCreationForm()
     return render(request, 'register.html', {'form': form})

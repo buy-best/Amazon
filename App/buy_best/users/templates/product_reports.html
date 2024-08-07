@@ -7,40 +7,67 @@
         background-color: #f9f9f9;
     }
 
+    .product-page {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .product-page h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    .section-title {
+        margin-top: 40px;
+        margin-bottom: 20px;
+        font-size: 1.5em;
+        color: #333;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 10px;
+    }
+
     .report-container {
         display: flex;
         flex-wrap: wrap;
         gap: 20px;
-        justify-content: space-around;
-        margin-top: 20px;
+        justify-content: center;
     }
+
     .report-card {
-        background-color: #f9f9f9;
+        background-color: #fff;
         border: 1px solid #ddd;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         padding: 20px;
         width: 300px;
-        transition: transform 0.3s;
+        transition: transform 0.3s, box-shadow 0.3s;
     }
+
     .report-card:hover {
         transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
     }
+
     .report-card h3 {
-        margin: 0;
+        margin-top: 0;
         font-size: 1.2em;
         color: #333;
     }
+
     .report-card p {
         margin: 10px 0;
         color: #666;
     }
+
     .report-card .price, .report-card .status {
         font-weight: bold;
     }
+
     .report-card .status {
         color: #ff0000;
     }
+
     .report-card .status.yes {
         color: #00aa00;
     }
@@ -52,7 +79,7 @@
     <h1>Product Reports</h1>
 
     {% if product_aggregates %}
-        <h2>Average Target Prices and Customer Counts</h2>
+        <div class="section-title">Average Target Prices and Customer Counts</div>
         <div class="report-container">
             {% for aggregate in product_aggregates %}
                 <div class="report-card">
@@ -66,8 +93,8 @@
         <p>No product aggregates available.</p>
     {% endif %}
 
-    <h2>AutoBuy Orders</h2>
     {% if autobuy_orders %}
+        <div class="section-title">AutoBuy Orders</div>
         <div class="report-container">
             {% for order in autobuy_orders %}
                 <div class="report-card">

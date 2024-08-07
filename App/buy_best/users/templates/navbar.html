@@ -63,7 +63,9 @@
         <li><a href="{% url 'home' %}">BuyBest!</a></li>
         <li><a href="{% url 'profile' %}">Profile</a></li>
         <li><a href="{% url 'product_list' %}">Amazon Shoes</a></li>
-        <li><a href="{% url 'tracked_items' %}">Tracked Items</a></li>
+        {% if user.is_customer %}
+            <li><a href="{% url 'tracked_items' %}">Tracked Items</a></li>
+        {% endif %}
         {% if user.is_authenticated %}
             {% if user.is_staff %}
                 <li><a href="{% url 'admin_dashboard' %}">Admin Dashboard</a></li>

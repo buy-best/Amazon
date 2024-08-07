@@ -141,6 +141,7 @@
         <a href="{{ product.url }}" target="_blank">View on Amazon</a>
     </div>
 
+    {% if user.is_customer %}
     <h2>Set Auto-Buy</h2>
     <form method="post" class="auto-buy-form">
         {% csrf_token %}
@@ -152,6 +153,7 @@
         {% endfor %}
         <button type="submit" class="btn btn-primary">Set Auto-Buy</button>
     </form>
+    {% endif %}
 
     <h2>Price Trend</h2>
     <canvas id="priceChart" width="400" height="200"></canvas>

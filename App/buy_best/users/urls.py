@@ -20,5 +20,6 @@ urlpatterns = [
     path('tracked_items/', views.tracked_items, name='tracked_items'),
     path('add_balance/', views.add_balance, name='add_balance'),
     path('cancel_auto_buy/<int:auto_buy_id>/', views.cancel_auto_buy, name='cancel_auto_buy'),
+    path('product_reports/', views.product_reports, name='product_reports'),
 ]
 

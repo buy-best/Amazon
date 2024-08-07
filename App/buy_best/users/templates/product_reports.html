@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <style>
+        .report-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .report-card {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            width: 300px;
+            transition: transform 0.3s;
+        }
+        .report-card:hover {
+            transform: translateY(-5px);
+        }
+        .report-card h3 {
+            margin: 0;
+            font-size: 1.2em;
+            color: #333;
+        }
+        .report-card p {
+            margin: 10px 0;
+            color: #666;
+        }
+        .report-card .price, .report-card .status {
+            font-weight: bold;
+        }
+        .report-card .status {
+            color: #ff0000;
+        }
+        .report-card .status.yes {
+            color: #00aa00;
+        }
+    </style>
+
+    <h1>Product Reports</h1>
+
+    {% if autobuy_orders %}
+        <div class="report-container">
+            {% for order in autobuy_orders %}
+                <div class="report-card">
+                    <h3>{{ order.product.name }}</h3>
+                    <p>User: {{ order.user.username }}</p>
+                    <p class="price">Target Price: ${{ order.target_price }}</p>
+                    <p class="status {% if order.bought %}yes{% endif %}">Bought: {{ order.bought|yesno:"Yes,No" }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No AutoBuy orders available.</p>
+    {% endif %}
+{% endblock %}

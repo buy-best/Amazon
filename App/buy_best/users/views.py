@@ -229,3 +229,18 @@ def view_preferences(request):
         'preferences': preferences,
     }
     return render(request, 'view_preferences.html', context)
+
+
+@login_required
+def product_reports(request):
+    if not request.user.is_seller:
+        return redirect('home')  # Redirect non-sellers away from this page
+
+    # Fetch all AutoBuy orders
+    autobuy_orders = AutoBuy.objects.all()
+
+    context = {
+        'autobuy_orders': autobuy_orders
+    }
+
+    return render(request, 'product_reports.html', context)

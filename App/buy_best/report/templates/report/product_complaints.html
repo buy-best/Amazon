@@ -1,0 +1,9 @@
+<h1>Complaints for {{ complaints.0.product.name }}</h1>
+<ul>
+{% for complaint in complaints %}
+    <li>
+        {{ complaint.get_complaint_type_display }}: {{ complaint.description }}
+        {% if complaint.resolved %}(Resolved){% endif %}
+    </li>
+{% endfor %}
+</ul>

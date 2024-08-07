@@ -1,0 +1,17 @@
+<h1>All Complaints</h1>
+<ul>
+{% for complaint in complaints %}
+    <li>
+        {{ complaint.product.name }} - {{ complaint.get_complaint_type_display }}: 
+        {{ complaint.description|truncatewords:20 }}
+        {% if not complaint.resolved %}
+            <form method="post" action="{% url 'resolve_complaint' complaint.id %}">
+                {% csrf_token %}
+                <button type="submit">Resolve</button>
+            </form>
+        {% else %}
+            (Resolved)
+        {% endif %}
+    </li>
+{% endfor %}
+</ul>

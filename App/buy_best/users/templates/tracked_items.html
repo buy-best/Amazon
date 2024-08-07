@@ -1,47 +1,121 @@
 {% extends 'base.html' %}
 
-{% block content %}
-<h1>Tracked Items</h1>
+{% block extra_css %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+    }
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Image</th>
-            <th>Name</th>
-            <th>Brand</th>
-            <th>Current Price</th>
-            <th>Target Price</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
+    .tracked-items-page {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .tracked-items-page h1 {
+        margin-top: 0;
+        font-size: 26px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .tracked-items-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .tracked-item-card {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        text-align: center;
+    }
+
+    .tracked-item-card img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+
+    .tracked-item-card p {
+        font-size: 16px;
+        color: #555;
+        margin: 5px 0;
+    }
+
+    .tracked-item-card p strong {
+        color: #333;
+    }
+
+    .btn-info, .btn-danger {
+        display: inline-block;
+        padding: 10px 20px;
+        margin-top: 10px;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+    .btn-info {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .btn-info:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-danger {
+        background-color: #000;
+        color: #fff;
+    }
+
+    .btn-danger:hover {
+        background-color: #333;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="tracked-items-page">
+    <h1>Tracked Items</h1>
+
+    <div class="tracked-items-grid">
         {% for item in tracked_items %}
-        <tr>
-            <td>
+        <div class="tracked-item-card">
+            <div>
                 {% if item.product.image_url %}
-                    <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" style="width: 50px; height: auto;">
+                    <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}">
                 {% else %}
                     No image available
                 {% endif %}
-            </td>
-            <td>{{ item.product.name }}</td>
-            <td>{{ item.product.brand }}</td>
-            <td>${{ item.product.current_price }}</td>
-            <td>${{ item.target_price }}</td>
-            <td>{{ item.bought|yesno:"Bought,Not Bought" }}</td>
-            <td>
+            </div>
+            <p><strong>Name:</strong> {{ item.product.name }}</p>
+            <p><strong>Brand:</strong> {{ item.product.brand }}</p>
+            <p><strong>Current Price:</strong> ${{ item.product.current_price }}</p>
+            <p><strong>Target Price:</strong> ${{ item.target_price }}</p>
+            <p><strong>Status:</strong> {{ item.bought|yesno:"Bought,Not Bought" }}</p>
+            <div>
                 <a href="{% url 'product_detail' item.product.id %}" class="btn btn-info">View Details</a>
                 {% if not item.bought %}
                     <a href="{% url 'cancel_auto_buy' item.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel this auto-buy?');">Cancel Auto-Buy</a>
                 {% endif %}
-            </td>
-        </tr>
+            </div>
+        </div>
         {% empty %}
-        <tr>
-            <td colspan="7">No tracked items.</td>
-        </tr>
+        <p>No tracked items.</p>
         {% endfor %}
-    </tbody>
-</table>
+    </div>
+</div>
 {% endblock %}

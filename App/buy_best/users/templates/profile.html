@@ -2,45 +2,95 @@
 
 {% block extra_css %}
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-}
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+    }
 
-.profile-page {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+    .profile-page-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+    }
 
-.profile-page h2 {
-    margin-top: 0;
-}
+    .profile-page {
+        width: 100%;
+        max-width: 600px;
+        padding: 30px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 40px;
+    }
 
-.edit-profile-link {
-    display: inline-block;
-    margin-top: 10px;
-    color: #007bff;
-    text-decoration: none;
-}
+    .profile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
 
-.edit-profile-link:hover {
-    text-decoration: underline;
-}
+    .profile-header h2 {
+        margin: 0;
+        font-size: 26px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .profile-info {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .profile-info p {
+        margin: 0;
+        font-size: 18px;
+        color: #555;
+    }
+
+    .profile-info .label {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .profile-info .value {
+        font-size: 18px;
+        color: #777;
+        margin-left: 10px;
+    }
+
+    .edit-profile-link {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #000;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 20px;
+        transition: background-color 0.3s;
+    }
+
+    .edit-profile-link:hover {
+        background-color: #333;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="profile-page">
-    <h2>Profile Page</h2>
-    <p>Welcome, {{ user.username }}!</p>
-    <p>Email: {{ user.email }}</p>
-    <p>First Name: {{ user.first_name }}</p>
-    <p>Last Name: {{ user.last_name }}</p>
-    <a href="{% url 'edit_profile' %}" class="edit-profile-link">Edit Profile</a>
+<div class="profile-page-container">
+    <div class="profile-page">
+        <div class="profile-header">
+            <h2>Profile Page</h2>
+            <a href="{% url 'edit_profile' %}" class="edit-profile-link">Edit Profile</a>
+        </div>
+        <div class="profile-info">
+            <p><span class="label">Username:</span><span class="value">{{ user.username }}</span></p>
+            <p><span class="label">Email:</span><span class="value">{{ user.email }}</span></p>
+            <p><span class="label">First Name:</span><span class="value">{{ user.first_name }}</span></p>
+            <p><span class="label">Last Name:</span><span class="value">{{ user.last_name }}</span></p>
+        </div>
+    </div>
 </div>
 {% endblock %}

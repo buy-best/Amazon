@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+    }
+    .admin-dashboard {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .admin-dashboard h2 {
+        margin-top: 0;
+    }
+    .stats {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 20px;
+    }
+    .stats div {
+        background: #007bff;
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <h2>Admin Dashboard</h2>
+    <div class="stats">
+        <div>
+            <h3>Customers</h3>
+            <p>{{ customers_count }}</p>
+        </div>
+        <div>
+            <h3>Sellers</h3>
+            <p>{{ sellers_count }}</p>
+        </div>
+        <div>
+            <h3>Products</h3>
+            <p>{{ products_count }}</p>
+        </div>
+        <div>
+            <h3>Orders</h3>
+            <p>{{ orders_count }}</p>
+        </div>
+    </div>
+    <button id="show-trend" onclick="showTrend()">Show Customer and Seller Trend</button>
+    <canvas id="trendChart" style="display:none;"></canvas>
+    <a href="{% url 'manage_products' %}">Manage Products</a>
+    <a href="{% url 'manage_users' %}">Manage Users</a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    function showTrend() {
+        fetch('{% url "customer_seller_trend" %}')
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('trendChart').getContext('2d');
+                document.getElementById('trendChart').style.display = 'block';
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Customers', 'Sellers'],
+                        datasets: [{
+                            label: 'Count',
+                            data: [data.customers_count, data.sellers_count],
+                            backgroundColor: ['rgba(54, 162, 235, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+                            borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            });
+    }
+</script>
+{% endblock %}

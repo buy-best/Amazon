@@ -2,46 +2,86 @@
 
 {% block extra_css %}
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-}
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f2f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
 
-.register-page {
-    width: 100%;
-    max-width: 500px;
-    padding: 20px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
+    .register-page {
+        width: 100%;
+        max-width: 400px;
+        padding: 30px;
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
 
-.register-page h2 {
-    margin-top: 0;
-}
+    .register-page h2 {
+        margin-top: 0;
+        color: #333;
+        font-size: 24px;
+    }
 
-.register-button {
-    display: inline-block;
-    padding: 10px 20px;
-    margin-top: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    text-decoration: none;
-}
+    .register-page form {
+        margin-top: 20px;
+        text-align: left;
+    }
 
-.register-button:hover {
-    background-color: #0056b3;
-}
+    .register-page label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .register-page input[type="text"],
+    .register-page input[type="email"],
+    .register-page input[type="password"] {
+        width: calc(100% - 20px);
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .register-button {
+        display: inline-block;
+        width: 100%;
+        padding: 12px;
+        margin-top: 10px;
+        background-color: #333;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 16px;
+    }
+
+    .register-button:hover {
+        background-color: #555;
+    }
+
+    .register-page p {
+        margin-top: 15px;
+        font-size: 14px;
+        color: #555;
+    }
+
+    .register-page a {
+        color: #333;
+        text-decoration: none;
+    }
+
+    .register-page a:hover {
+        text-decoration: underline;
+    }
 </style>
 {% endblock %}
 

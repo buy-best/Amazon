@@ -9,6 +9,7 @@ from .models import UserPreference, CustomUser, Product, Order
 from django.shortcuts import render
 from tracker.models import Product
 from tracker.forms import ProductFilterForm, ProductSortForm
+from django.db.models import Avg, Count
 
 def register(request):
     if request.method == 'POST':
@@ -239,8 +240,15 @@ def product_reports(request):
     # Fetch all AutoBuy orders
     autobuy_orders = AutoBuy.objects.all()
 
+    # Calculate average target prices and count of customers for each product
+    product_aggregates = AutoBuy.objects.values('product__name', 'product__id').annotate(
+        avg_target_price=Avg('target_price'),
+        customer_count=Count('user', distinct=True)
+    )
+
     context = {
-        'autobuy_orders': autobuy_orders
+        'autobuy_orders': autobuy_orders,
+        'product_aggregates': product_aggregates
     }
 
     return render(request, 'product_reports.html', context)

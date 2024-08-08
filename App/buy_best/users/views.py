@@ -232,13 +232,14 @@ def view_preferences(request):
     return render(request, 'view_preferences.html', context)
 
 
+
 @login_required
 def product_reports(request):
     if not request.user.is_seller:
         return redirect('home')  # Redirect non-sellers away from this page
 
     # Fetch all AutoBuy orders
-    autobuy_orders = AutoBuy.objects.all()
+    autobuy_orders = AutoBuy.objects.select_related('product').all()
 
     # Calculate average target prices and count of customers for each product
     product_aggregates = AutoBuy.objects.values('product__name', 'product__id').annotate(

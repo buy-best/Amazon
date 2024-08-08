@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
 {% block extra_css %}
 <style>
     body {
@@ -7,69 +11,65 @@
         background-color: #f9f9f9;
     }
 
-    .product-page {
-        padding: 20px;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    .product-page h1 {
-        text-align: center;
-        color: #333;
-    }
-
-    .section-title {
-        margin-top: 40px;
-        margin-bottom: 20px;
-        font-size: 1.5em;
-        color: #333;
-        border-bottom: 2px solid #ddd;
-        padding-bottom: 10px;
-    }
-
     .report-container {
         display: flex;
         flex-wrap: wrap;
         gap: 20px;
-        justify-content: center;
+        justify-content: space-around;
+        margin-top: 20px;
     }
-
     .report-card {
-        background-color: #fff;
+        background-color: #f9f9f9;
         border: 1px solid #ddd;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         padding: 20px;
-        width: 300px;
-        transition: transform 0.3s, box-shadow 0.3s;
+        width: 100%;
+        max-width: 600px;
+        transition: transform 0.3s;
     }
-
     .report-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
     }
-
     .report-card h3 {
-        margin-top: 0;
+        margin: 0;
         font-size: 1.2em;
         color: #333;
     }
-
     .report-card p {
         margin: 10px 0;
         color: #666;
     }
-
     .report-card .price, .report-card .status {
         font-weight: bold;
     }
-
     .report-card .status {
         color: #ff0000;
     }
-
     .report-card .status.yes {
         color: #00aa00;
+    }
+    .chart-container {
+        position: relative;
+        height: 200px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    table th, table td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: left;
+        font-size: 16px;
+    }
+    table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+    table tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
     }
 </style>
 {% endblock %}
@@ -79,13 +79,35 @@
     <h1>Product Reports</h1>
 
     {% if product_aggregates %}
-        <div class="section-title">Average Target Prices and Customer Counts</div>
+        <h2>Average Target Prices and Customer Counts</h2>
         <div class="report-container">
             {% for aggregate in product_aggregates %}
                 <div class="report-card">
                     <h3>{{ aggregate.product__name }}</h3>
                     <p class="price">Average Target Price: ${{ aggregate.avg_target_price|floatformat:2 }}</p>
                     <p class="price">Number of Customers: {{ aggregate.customer_count }}</p>
+                    <div class="chart-container">
+                        <canvas id="chart-{{ aggregate.product__id }}"></canvas>
+                    </div>
+                    <h4>Price History</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in autobuy_orders %}
+                                {% if order.product.id == aggregate.product__id %}
+                                    <tr>
+                                        <td>{{ order.created_at|date:"Y-m-d H:i" }}</td>
+                                        <td>${{ order.target_price }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             {% endfor %}
         </div>
@@ -93,8 +115,8 @@
         <p>No product aggregates available.</p>
     {% endif %}
 
+    <h2>AutoBuy Orders</h2>
     {% if autobuy_orders %}
-        <div class="section-title">AutoBuy Orders</div>
         <div class="report-container">
             {% for order in autobuy_orders %}
                 <div class="report-card">
@@ -109,4 +131,38 @@
         <p>No AutoBuy orders available.</p>
     {% endif %}
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    {% for aggregate in product_aggregates %}
+        var ctx = document.getElementById('chart-{{ aggregate.product__id }}').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [{% for order in autobuy_orders %}{% if order.product.id == aggregate.product__id %}'{{ order.created_at|date:"Y-m-d H:i" }}',{% endif %}{% endfor %}],
+                datasets: [{
+                    label: 'Price',
+                    data: [{% for order in autobuy_orders %}{% if order.product.id == aggregate.product__id %}{{ order.target_price }},{% endif %}{% endfor %}],
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'day'
+                        }
+                    },
+                    y: {
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+    {% endfor %}
+});
+</script>
 {% endblock %}

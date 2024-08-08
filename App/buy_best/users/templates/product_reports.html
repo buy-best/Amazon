@@ -19,10 +19,10 @@
         margin-top: 20px;
     }
     .report-card {
-        background-color: #f9f9f9;
+        background-color: #fff;
         border: 1px solid #ddd;
         border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         padding: 20px;
         width: 100%;
         max-width: 600px;
@@ -79,7 +79,6 @@
     <h1>Product Reports</h1>
 
     {% if product_aggregates %}
-        <h2>Average Target Prices and Customer Counts</h2>
         <div class="report-container">
             {% for aggregate in product_aggregates %}
                 <div class="report-card">

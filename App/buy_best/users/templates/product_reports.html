@@ -27,6 +27,7 @@
         width: 100%;
         max-width: 600px;
         transition: transform 0.3s;
+        text-align: center;
     }
     .report-card:hover {
         transform: translateY(-5px);
@@ -52,6 +53,11 @@
     .chart-container {
         position: relative;
         height: 200px;
+    }
+    .product-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
     }
     table {
         width: 100%;
@@ -82,9 +88,14 @@
         <div class="report-container">
             {% for aggregate in product_aggregates %}
                 <div class="report-card">
+                    <img src="{{ aggregate.product__image_url }}" alt="{{ aggregate.product__name }}" class="product-image">
                     <h3>{{ aggregate.product__name }}</h3>
+                    <p>Brand: {{ aggregate.product__brand }}</p>
+                    <p class="price">Current Price: ${{ aggregate.product__current_price }}</p>
                     <p class="price">Average Target Price: ${{ aggregate.avg_target_price|floatformat:2 }}</p>
                     <p class="price">Number of Customers: {{ aggregate.customer_count }}</p>
+                    <p>Rating: {{ aggregate.product__rating }}</p>
+                    <p>Reviews: {{ aggregate.product__review_count }}</p>
                     <div class="chart-container">
                         <canvas id="chart-{{ aggregate.product__id }}"></canvas>
                     </div>

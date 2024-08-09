@@ -6,10 +6,12 @@ from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import UserPreferenceForm
 from .models import UserPreference, CustomUser, Product, Order
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from tracker.models import Product
 from tracker.forms import ProductFilterForm, ProductSortForm
 from django.db.models import Avg, Count
+from django.db.models.functions import TruncDate
+
 
 def register(request):
     if request.method == 'POST':
@@ -231,25 +233,62 @@ def view_preferences(request):
     }
     return render(request, 'view_preferences.html', context)
 
-
+from django.db.models import Avg, Count, F
 
 @login_required
 def product_reports(request):
     if not request.user.is_seller:
         return redirect('home')  # Redirect non-sellers away from this page
-
+    
     # Fetch all AutoBuy orders
     autobuy_orders = AutoBuy.objects.select_related('product').all()
-
+    
     # Calculate average target prices and count of customers for each product
-    product_aggregates = AutoBuy.objects.values('product__name', 'product__id').annotate(
+    product_aggregates = AutoBuy.objects.values(
+        'product__id', 
+        'product__name',
+        'product__brand',
+        'product__current_price',
+        'product__image_url',
+        'product__rating',
+        'product__review_count'
+    ).annotate(
         avg_target_price=Avg('target_price'),
         customer_count=Count('user', distinct=True)
     )
-
+    
+    # Prepare data for charts
+    chart_data = prepare_chart_data(product_aggregates, autobuy_orders)
+    
     context = {
         'autobuy_orders': autobuy_orders,
-        'product_aggregates': product_aggregates
+        'product_aggregates': product_aggregates,
+        'chart_data': chart_data
+    }
+    
+    return render(request, 'product_reports.html', context)
+
+def prepare_chart_data(product_aggregates, autobuy_orders):
+    avg_price_data = {
+        'labels': [p['product__name'] for p in product_aggregates],
+        'data': [float(p['avg_target_price']) for p in product_aggregates]
+    }
+    
+    customer_distribution_data = {
+        'labels': [p['product__name'] for p in product_aggregates],
+        'data': [p['customer_count'] for p in product_aggregates]
+    }
+    
+    price_history_data = {}
+    for order in autobuy_orders:
+        if order.product.id not in price_history_data:
+            price_history_data[order.product.id] = {'dates': [], 'prices': []}
+        price_history_data[order.product.id]['dates'].append(order.created_at.strftime('%Y-%m-%d %H:%M'))
+        price_history_data[order.product.id]['prices'].append(float(order.target_price))
+    
+    return {
+        'avg_price': avg_price_data,
+        'customer_distribution': customer_distribution_data,
+        'price_history': price_history_data
     }
 
-    return render(request, 'product_reports.html', context)

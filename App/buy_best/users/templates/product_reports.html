@@ -1,7 +1,10 @@
 {% extends "base.html" %}
+{% load custom_filters %}
+
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 {% endblock %}
 
 {% block extra_css %}
@@ -84,6 +87,17 @@
 <div class="product-page">
     <h1>Product Reports</h1>
 
+    <div class="report-container">
+        <div class="report-card">
+            <h2>Average Target Price by Product</h2>
+            <canvas id="avgPriceChart"></canvas>
+        </div>
+        <div class="report-card">
+            <h2>Customer Distribution by Product</h2>
+            <canvas id="customerDistributionChart"></canvas>
+        </div>
+    </div>
+
     {% if product_aggregates %}
         <div class="report-container">
             {% for aggregate in product_aggregates %}
@@ -97,27 +111,9 @@
                     <p>Rating: {{ aggregate.product__rating }}</p>
                     <p>Reviews: {{ aggregate.product__review_count }}</p>
                     <div class="chart-container">
+                        <pre>{{ chart_data.price_history|get_item:aggregate.product__id|json_script:"debug-data" }}</pre>
                         <canvas id="chart-{{ aggregate.product__id }}"></canvas>
                     </div>
-                    <h4>Price History</h4>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Price</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for order in autobuy_orders %}
-                                {% if order.product.id == aggregate.product__id %}
-                                    <tr>
-                                        <td>{{ order.created_at|date:"Y-m-d H:i" }}</td>
-                                        <td>${{ order.target_price }}</td>
-                                    </tr>
-                                {% endif %}
-                            {% endfor %}
-                        </tbody>
-                    </table>
                 </div>
             {% endfor %}
         </div>
@@ -142,37 +138,95 @@
     {% endif %}
 </div>
 
+
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    {% for aggregate in product_aggregates %}
-        var ctx = document.getElementById('chart-{{ aggregate.product__id }}').getContext('2d');
-        var chart = new Chart(ctx, {
-            type: 'line',
+    document.addEventListener("DOMContentLoaded", function() {
+        var ctx = document.getElementById('avgPriceChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
             data: {
-                labels: [{% for order in autobuy_orders %}{% if order.product.id == aggregate.product__id %}'{{ order.created_at|date:"Y-m-d H:i" }}',{% endif %}{% endfor %}],
+                labels: {{ chart_data.avg_price.labels|safe }},
                 datasets: [{
-                    label: 'Price',
-                    data: [{% for order in autobuy_orders %}{% if order.product.id == aggregate.product__id %}{{ order.target_price }},{% endif %}{% endfor %}],
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1
+                    label: 'Average Target Price',
+                    data: {{ chart_data.avg_price.data|safe }},
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
                 }]
             },
             options: {
                 responsive: true,
                 scales: {
-                    x: {
-                        type: 'time',
-                        time: {
-                            unit: 'day'
-                        }
-                    },
                     y: {
-                        beginAtZero: false
+                        beginAtZero: true
                     }
                 }
             }
         });
-    {% endfor %}
-});
-</script>
+    
+        ctx = document.getElementById('customerDistributionChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: {{ chart_data.customer_distribution.labels|safe }},
+                datasets: [{
+                    data: {{ chart_data.customer_distribution.data|safe }},
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                    ]
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        {% for aggregate in product_aggregates %}
+            ctx = document.getElementById('chart-{{ aggregate.product__id }}').getContext('2d');
+            var priceHistoryData = {{ chart_data.price_history|get_item:aggregate.product__id|safe }};
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: priceHistoryData.dates,
+                    datasets: [{
+                        label: 'Price History',
+                        data: priceHistoryData.prices,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day',
+                                displayFormats: {
+                                    day: 'MMM d, yyyy'
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Date'
+                            }
+                        },
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: 'Price ($)'
+                            }
+                        }
+                    }
+                }
+            });
+        {% endfor %}
+    });
+    </script>
+    
 {% endblock %}

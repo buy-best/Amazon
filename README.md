@@ -26,10 +26,7 @@ Seller Insights and Analytics:
 
 Premium sellers can access data on user preferences and product price points, providing valuable insights into optimal pricing strategies.
 Sellers receive notifications when demand peaks for certain price points, allowing them to adjust pricing dynamically.
-Wallet and Payment Systems:
 
-Users can load money into the app's wallet and make purchases directly. Wallet transactions are rewarded with bonuses such as coupons.
-For users who prefer, credit cards can also be linked, allowing direct payment for purchases.
-Seller Verification and Security:
+
 
 
